@@ -12,7 +12,7 @@ public class SleepCommand extends Thread implements Resultable {
 
     @Override
     public boolean finished() {
-        return this.finished();
+        return !this.isAlive();
     }
 
     @Override

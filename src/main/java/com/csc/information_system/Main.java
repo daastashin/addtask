@@ -14,13 +14,19 @@ public class Main {
         boolean exit = false;
         Thread thread = new Thread(() -> {
             while (true) {
+                int size = queue.size();
+                int temp = 0;
                 for (Resultable el : queue) {
                     if (el.finished()) {
-                        el.printResult();
+                        temp++;
                     }
                 }
+                if (temp == size) {
+                    queue.stream().forEach((it) -> it.printResult());
+                    queue.clear();
+                }
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -31,7 +37,6 @@ public class Main {
         while(!exit) {
             Scanner console = new Scanner(System.in);
             String input = console.next();
-            System.out.println("you wrote: " + input);
             if (input.equals("exit")) {
                 exit = true;
             } else {
@@ -61,9 +66,7 @@ public class Main {
 
         if (exp1.interpret(input)) {
             String path = input.substring(4);
-            ReadCommand rc = new ReadCommand(path);
-            db.insertToDB(input);
-            queue.add(rc);
+            ReadCommand rc = new ReadCommand(path, input);
             nomatch = false;
         }
         if (input.equals("ps")) {

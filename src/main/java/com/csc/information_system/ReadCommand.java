@@ -8,10 +8,12 @@ import java.io.IOException;
 public class ReadCommand extends Thread  implements Resultable {
 
     private String path;
+    private String input;
     private String result = "file not found";
 
-    public ReadCommand(String path) {
+    public ReadCommand(String path, String input) {
         this.path = path;
+        this.input = input;
         this.start();
     }
 
@@ -22,7 +24,7 @@ public class ReadCommand extends Thread  implements Resultable {
 
     @Override
     public boolean finished() {
-        return this.finished();
+        return !this.isAlive();
     }
 
     @Override
@@ -31,6 +33,8 @@ public class ReadCommand extends Thread  implements Resultable {
         if (!file.exists()) {
             System.out.println("file not found");
         } else {
+            DataBaseClass.getInstance().insertToDB(input);
+            Main.queue.add(this);
             try {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line = br.readLine();
